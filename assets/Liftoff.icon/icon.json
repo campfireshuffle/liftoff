@@ -11,20 +11,20 @@
       "layers": [
         {
           "glass": false,
-          "image-name": "Window.png",
-          "name": "Window with twin thrusters",
+          "image-name": "Composition.png",
+          "name": "Simplified window lifting off",
           "position": {
-            "scale": 0.8,
+            "scale": 0.875,
             "translation-in-points": [
               0,
-              -6
+              0
             ]
           }
         }
       ],
       "shadow": {
         "kind": "neutral",
-        "opacity": 0.32
+        "opacity": 0
       },
       "specular": false,
       "translucency": {
