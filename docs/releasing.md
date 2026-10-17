@@ -35,4 +35,6 @@ The workflow reads these from the repository's `release` environment:
 certificate to sign it; otherwise it's signed ad hoc (or with a local "Liftoff Dev" identity, if
 present, so macOS keeps permissions across rebuilds).
 
-`swift scripts/make-icon.swift` redraws the app icon, menu bar icon and social preview into `assets/`.
+`swift scripts/make-icon.swift` exports the app icon from the Icon Composer bundle
+(`assets/Liftoff.icon`, needs Xcode with Icon Composer), draws the menu bar icon, and renders the
+social preview into `assets/`.

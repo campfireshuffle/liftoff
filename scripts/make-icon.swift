@@ -1,7 +1,6 @@
 #!/usr/bin/env swift
-// Draws Liftoff's icons from one rocket shape: the app icon (assets/Liftoff.icns), the template
-// menu bar icon (assets/MenuBarIcon.png and @2x), and the repo's social preview card
-// (assets/social-preview.png, 1280x640).
+// Exports the Icon Composer app icon, draws the template menu bar rocket, and renders
+// the social preview card. Requires Xcode with Icon Composer installed.
 // Usage: swift scripts/make-icon.swift
 import AppKit
 
@@ -63,50 +62,33 @@ func save(_ rep: NSBitmapImageRep, _ url: URL) {
     try! rep.representation(using: .png, properties: [:])!.write(to: url)
 }
 
-/// The app icon at 1024pt: a night-sky squircle and a white rocket on a flame, lifting off in smoke.
+// Icon Composer exports the tile without macOS's outer safe area.
+let composedURL = FileManager.default.temporaryDirectory
+    .appendingPathComponent("Liftoff-\(UUID().uuidString).png")
+let developerPath = ProcessInfo.processInfo.environment["DEVELOPER_DIR"]
+    ?? "/Applications/Xcode.app/Contents/Developer"
+let composer = Process()
+composer.executableURL = URL(fileURLWithPath: developerPath)
+    .appendingPathComponent("../Applications/Icon Composer.app/Contents/Executables/ictool")
+composer.arguments = [assets.appendingPathComponent("Liftoff.icon").path,
+    "--export-image", "--output-file", composedURL.path, "--platform", "macOS",
+    "--rendition", "Default", "--width", "1024", "--height", "1024", "--scale", "1"]
+try composer.run()
+composer.waitUntilExit()
+guard composer.terminationStatus == 0,
+      let composed = NSBitmapImageRep(data: try Data(contentsOf: composedURL))?.cgImage else {
+    fatalError("Icon Composer export failed")
+}
+try FileManager.default.removeItem(at: composedURL)
+
 func appIcon(_ size: Int) -> NSBitmapImageRep {
     bitmap(size) { c in
         let s = CGFloat(size) / 1024
         c.scaleBy(x: s, y: s)
-        let tile = CGRect(x: 100, y: 100, width: 824, height: 824)
-        let shape = CGPath(roundedRect: tile, cornerWidth: 185, cornerHeight: 185, transform: nil)
-
-        c.saveGState()
-        c.setShadow(offset: CGSize(width: 0, height: -12), blur: 28, color: CGColor(gray: 0, alpha: 0.35))
-        c.addPath(shape)
-        c.setFillColor(CGColor(red: 0.07, green: 0.075, blue: 0.09, alpha: 1))
-        c.fillPath()
-        c.restoreGState()
-
-        c.saveGState()
-        c.addPath(shape)
-        c.clip()
-        let sky = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [
-            CGColor(red: 0.12, green: 0.13, blue: 0.17, alpha: 1), CGColor(red: 0.03, green: 0.035, blue: 0.045, alpha: 1),
-        ] as CFArray, locations: [0, 1])!
-        c.drawLinearGradient(sky, start: CGPoint(x: 0, y: 924), end: CGPoint(x: 0, y: 100), options: [])
-        // Exhaust puffs on the ground.
-        let horizon: CGFloat = 270
-        for (x, r, a) in [(330.0, 70.0, 0.22), (420.0, 90.0, 0.28), (520.0, 64.0, 0.2), (250.0, 52.0, 0.16)] {
-            c.setFillColor(CGColor(gray: 0.9, alpha: a))
-            c.fillEllipse(in: CGRect(x: x - r, y: horizon - r * 0.55, width: r * 2, height: r * 1.1))
-        }
-        let (body, flame) = rocket(in: CGRect(x: 250, y: 260, width: 560, height: 560), flame: true)
-        if let flame {
-            c.saveGState()
-            c.addPath(flame)
-            c.clip()
-            let fire = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [
-                CGColor(red: 1, green: 0.85, blue: 0.4, alpha: 1), CGColor(red: 1, green: 0.3, blue: 0.15, alpha: 1),
-            ] as CFArray, locations: [0, 1])!
-            c.drawLinearGradient(fire, start: CGPoint(x: 560, y: 520), end: CGPoint(x: 300, y: 270), options: [])
-            c.restoreGState()
-        }
-        c.setShadow(offset: CGSize(width: 0, height: -8), blur: 24, color: CGColor(gray: 0, alpha: 0.5))
-        c.addPath(body)
-        c.setFillColor(CGColor(gray: 0.96, alpha: 1))
-        c.fillPath(using: .evenOdd)
-        c.restoreGState()
+        c.interpolationQuality = .high
+        c.setShadow(offset: CGSize(width: 0, height: -10), blur: 22,
+                    color: CGColor(gray: 0, alpha: 0.25))
+        c.draw(composed, in: CGRect(x: 100, y: 100, width: 824, height: 824))
     }
 }
 

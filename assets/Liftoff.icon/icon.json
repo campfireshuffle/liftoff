@@ -1,0 +1,41 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.17,0.185,0.22,1",
+      "srgb:0.055,0.065,0.085,1"
+    ]
+  },
+  "groups": [
+    {
+      "blur-material": null,
+      "layers": [
+        {
+          "glass": false,
+          "image-name": "Rocket.png",
+          "name": "Ivory rocket",
+          "position": {
+            "scale": 0.82,
+            "translation-in-points": [
+              0,
+              -6
+            ]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.32
+      },
+      "specular": false,
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "macOS"
+    ]
+  }
+}
