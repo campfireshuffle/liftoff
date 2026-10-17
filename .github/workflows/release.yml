@@ -159,7 +159,7 @@ jobs:
           gh release create "v${VERSION}" "$ARCHIVE" "$CHECKSUM" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "Liftoff ${VERSION}" \
+            --title "${VERSION}" \
             --generate-notes
 
       - name: Prepare Homebrew cask update
