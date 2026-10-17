@@ -1,6 +1,7 @@
 #!/usr/bin/env swift
-// Draws Liftoff's icons from one rocket shape: the app icon (assets/Liftoff.icns) and the
-// template menu bar icon (assets/MenuBarIcon.png and @2x).
+// Draws Liftoff's icons from one rocket shape: the app icon (assets/Liftoff.icns), the template
+// menu bar icon (assets/MenuBarIcon.png and @2x), and the repo's social preview card
+// (assets/social-preview.png, 1280x640).
 // Usage: swift scripts/make-icon.swift
 import AppKit
 
@@ -62,7 +63,7 @@ func save(_ rep: NSBitmapImageRep, _ url: URL) {
     try! rep.representation(using: .png, properties: [:])!.write(to: url)
 }
 
-/// The app icon at 1024pt: a night-sky squircle, the red light strip, and a white rocket on a flame.
+/// The app icon at 1024pt: a night-sky squircle and a white rocket on a flame, lifting off in smoke.
 func appIcon(_ size: Int) -> NSBitmapImageRep {
     bitmap(size) { c in
         let s = CGFloat(size) / 1024
@@ -84,13 +85,8 @@ func appIcon(_ size: Int) -> NSBitmapImageRep {
             CGColor(red: 0.12, green: 0.13, blue: 0.17, alpha: 1), CGColor(red: 0.03, green: 0.035, blue: 0.045, alpha: 1),
         ] as CFArray, locations: [0, 1])!
         c.drawLinearGradient(sky, start: CGPoint(x: 0, y: 924), end: CGPoint(x: 0, y: 100), options: [])
-        // The red strip on the horizon, with a glow.
-        let horizon: CGFloat = 270
-        c.setShadow(offset: .zero, blur: 40, color: CGColor(red: 1, green: 0.15, blue: 0.1, alpha: 0.9))
-        c.setFillColor(CGColor(red: 1, green: 0.2, blue: 0.15, alpha: 1))
-        c.fill(CGRect(x: 100, y: horizon - 4, width: 824, height: 8))
-        c.setShadow(offset: .zero, blur: 0)
         // Exhaust puffs on the ground.
+        let horizon: CGFloat = 270
         for (x, r, a) in [(330.0, 70.0, 0.22), (420.0, 90.0, 0.28), (520.0, 64.0, 0.2), (250.0, 52.0, 0.16)] {
             c.setFillColor(CGColor(gray: 0.9, alpha: a))
             c.fillEllipse(in: CGRect(x: x - r, y: horizon - r * 0.55, width: r * 2, height: r * 1.1))
@@ -112,6 +108,35 @@ func appIcon(_ size: Int) -> NSBitmapImageRep {
         c.fillPath(using: .evenOdd)
         c.restoreGState()
     }
+}
+
+/// The repo's social preview: the app icon beside the name and tagline, on a night sky.
+func socialCard() -> NSBitmapImageRep {
+    let width = 1280, height = 640
+    let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height, bitsPerSample: 8,
+                               samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                               colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+    let c = NSGraphicsContext.current!.cgContext
+    let sky = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [
+        CGColor(red: 0.07, green: 0.075, blue: 0.095, alpha: 1), CGColor(red: 0.02, green: 0.022, blue: 0.03, alpha: 1),
+    ] as CFArray, locations: [0, 1])!
+    c.drawLinearGradient(sky, start: CGPoint(x: 0, y: CGFloat(height)), end: .zero, options: [])
+
+    // The icon on the left, its own tile shadow included.
+    c.draw(appIcon(1024).cgImage!, in: CGRect(x: 70, y: 110, width: 420, height: 420))
+
+    let title = NSAttributedString(string: "Liftoff", attributes: [
+        .font: NSFont.systemFont(ofSize: 132, weight: .bold), .foregroundColor: NSColor(white: 0.97, alpha: 1),
+    ])
+    title.draw(at: CGPoint(x: 520, y: 330))
+    let tagline = NSAttributedString(string: "Give your Mac's windows thrusters.", attributes: [
+        .font: NSFont.systemFont(ofSize: 40, weight: .regular), .foregroundColor: NSColor(white: 0.72, alpha: 1),
+    ])
+    tagline.draw(at: CGPoint(x: 526, y: 268))
+    NSGraphicsContext.restoreGraphicsState()
+    return rep
 }
 
 /// The menu bar icon: the same rocket, black on clear, for a template image.
@@ -146,4 +171,5 @@ save(appIcon(1024), assets.appendingPathComponent("Liftoff-1024.png"))
 
 save(menuBarIcon(18, scale: 1), assets.appendingPathComponent("MenuBarIcon.png"))
 save(menuBarIcon(18, scale: 2), assets.appendingPathComponent("MenuBarIcon@2x.png"))
-print("Wrote \(assets.path)/Liftoff.icns, Liftoff-1024.png and MenuBarIcon.png")
+save(socialCard(), assets.appendingPathComponent("social-preview.png"))
+print("Wrote \(assets.path)/Liftoff.icns, Liftoff-1024.png, MenuBarIcon.png and social-preview.png")
