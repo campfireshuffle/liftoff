@@ -1,0 +1,6 @@
+.build/
+dist/
+source_material/
+.DS_Store
+takes/
+assets/wallpaper-night-track.png
