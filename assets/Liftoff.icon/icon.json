@@ -1,8 +1,8 @@
 {
   "fill": {
     "linear-gradient": [
-      "srgb:0.17,0.185,0.22,1",
-      "srgb:0.055,0.065,0.085,1"
+      "srgb:0.13,0.145,0.17,1",
+      "srgb:0.035,0.045,0.06,1"
     ]
   },
   "groups": [
@@ -11,10 +11,10 @@
       "layers": [
         {
           "glass": false,
-          "image-name": "Rocket.png",
-          "name": "Ivory rocket",
+          "image-name": "Window.png",
+          "name": "Window with twin thrusters",
           "position": {
-            "scale": 0.82,
+            "scale": 0.8,
             "translation-in-points": [
               0,
               -6
