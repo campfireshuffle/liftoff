@@ -62,7 +62,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             menu.addItem(.separator())
         }
         menu.addItem(item("Settings…", #selector(showSettings), key: ","))
-        menu.addItem(item("Land All Windows Now", #selector(landNow)))
         menu.addItem(.separator())
         menu.addItem(item("Quit Liftoff", #selector(quit), key: "q"))
     }
@@ -75,6 +74,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func showSettings() { settings.show() }
     @objc private func showWelcome() { onboarding.show() }
-    @objc private func landNow() { liftoff.landEverythingNow() }
     @objc private func quit() { NSApp.terminate(nil) }
 }
