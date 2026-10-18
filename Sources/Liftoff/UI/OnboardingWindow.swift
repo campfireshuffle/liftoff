@@ -101,7 +101,7 @@ final class OnboardingWindowController: NSObject {
             window.makeKeyAndOrderFront(nil)
             return
         }
-        model.landed = false
+        model.landed = Settings.welcomeHasFlown
         let window = NSWindow(
             contentRect: NSRect(origin: .zero, size: Self.size),
             styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
@@ -116,6 +116,14 @@ final class OnboardingWindowController: NSObject {
         guard let screen = NSScreen.main else { return }
         let area = screen.visibleFrame
         let landing = CGPoint(x: area.midX - Self.size.width / 2, y: area.midY - Self.size.height / 2)
+        if Settings.welcomeHasFlown {
+            window.setFrameOrigin(landing)
+            NSApp.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+            return
+        }
+        Settings.welcomeHasFlown = true
+
         let start = CGPoint(x: landing.x + 140, y: screen.frame.maxY + 40)
         window.setFrameOrigin(start)
         NSApp.activate(ignoringOtherApps: true)
