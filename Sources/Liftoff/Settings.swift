@@ -36,7 +36,7 @@ enum Settings {
     }
 
     static var soundEnabled: Bool {
-        get { defaults.object(forKey: "soundEnabled") as? Bool ?? true }
+        get { defaults.object(forKey: "soundEnabled") as? Bool ?? false }
         set { defaults.set(newValue, forKey: "soundEnabled") }
     }
 
