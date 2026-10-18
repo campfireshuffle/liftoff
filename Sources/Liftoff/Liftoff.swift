@@ -127,7 +127,8 @@ final class Liftoff: NSObject {
         }
     }
 
-    /// Puts every flying window where it was headed, immediately. Used from the menu and on quit.
+    /// Puts every flying window where it was headed, immediately, so none is left parked off-screen
+    /// when Liftoff quits or the displays change.
     func landEverythingNow() {
         held = nil
         for body in world.bodies {
