@@ -4,7 +4,7 @@ import Foundation
 import ScreenCaptureKit
 
 enum GrabKey: String, CaseIterable {
-    case hyper, controlOption, optionCommand, controlCommand
+    case controlOption, optionCommand, controlCommand, hyper
 
     var flags: CGEventFlags {
         switch self {
@@ -15,12 +15,12 @@ enum GrabKey: String, CaseIterable {
         }
     }
 
-    var symbols: String {
+    var label: String {
         switch self {
-        case .hyper: "Hyper (⌃⌥⇧⌘)"
-        case .controlOption: "⌃⌥"
-        case .optionCommand: "⌥⌘"
-        case .controlCommand: "⌃⌘"
+        case .hyper: "Hyper ⌃⌥⇧⌘"
+        case .controlOption: "Control-Option ⌃⌥"
+        case .optionCommand: "Option-Command ⌥⌘"
+        case .controlCommand: "Control-Command ⌃⌘"
         }
     }
 }
@@ -28,8 +28,10 @@ enum GrabKey: String, CaseIterable {
 enum Settings {
     private static let defaults = UserDefaults.standard
 
+    /// Control-Option by default: most people don't have a Hyper key, and holding Hyper presses
+    /// Control-Option too, so it still grabs.
     static var grabKey: GrabKey {
-        get { defaults.string(forKey: "grabKey").flatMap(GrabKey.init) ?? .hyper }
+        get { defaults.string(forKey: "grabKey").flatMap(GrabKey.init) ?? .controlOption }
         set { defaults.set(newValue.rawValue, forKey: "grabKey") }
     }
 
