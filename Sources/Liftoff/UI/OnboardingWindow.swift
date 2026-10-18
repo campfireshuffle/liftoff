@@ -46,11 +46,17 @@ struct OnboardingView: View {
                 .background(.background.secondary, in: RoundedRectangle(cornerRadius: 12))
                 .transition(.move(edge: .bottom).combined(with: .opacity))
 
-                if preferences.allGranted {
-                    Text("Hold \(preferences.grabKey.symbols) and fling a window.")
-                        .foregroundStyle(.secondary)
-                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+                HStack(spacing: 8) {
+                    Text("Hold")
+                    Picker("Grab key", selection: $preferences.grabKey) {
+                        ForEach(GrabKey.allCases, id: \.self) { Text($0.label).tag($0) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                    Text("and fling a window.")
                 }
+                .foregroundStyle(.secondary)
+                .transition(.opacity)
 
                 Button(preferences.allGranted ? "Done" : "Later", action: done)
                     .keyboardShortcut(.defaultAction)

@@ -9,7 +9,7 @@ struct SettingsView: View {
         Form {
             Section {
                 Picker("Grab key", selection: $preferences.grabKey) {
-                    ForEach(GrabKey.allCases, id: \.self) { Text($0.symbols).tag($0) }
+                    ForEach(GrabKey.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
                 Picker("Land", selection: $preferences.landsAnywhere) {
                     Text("Wherever there's room").tag(true)
