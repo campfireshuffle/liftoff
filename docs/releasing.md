@@ -11,7 +11,14 @@ Releases are built, signed, notarized and published by the **Release** workflow
    ```
 
 3. The workflow pushes a `liftoff-X.Y.Z` branch to `campfireshuffle/homebrew-tap` with the new cask
-   version and checksum. Open and merge its pull request.
+   version and checksum. It can't open the pull request itself (its deploy key can push branches
+   but not use the API), so open one from the link in the run summary, or:
+
+   ```sh
+   gh pr create --repo campfireshuffle/homebrew-tap --head liftoff-X.Y.Z --fill
+   ```
+
+   Then merge it.
 
 ## Secrets
 
