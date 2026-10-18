@@ -3,16 +3,16 @@
 Can Liftoff ship on the Mac App Store? Apps sold there must run in the App Sandbox (App Review
 Guideline 2.4.5), so this page records what happens to each part of Liftoff when it runs sandboxed.
 
-**Verdict: no-go for now.** Most of the app works in the sandbox, but moving another app's window
-doesn't. That's the one thing Liftoff can't do without, and the only workaround that worked
-depends on an entitlement App Review rarely grants. Keep shipping direct (Developer ID, Homebrew).
+**Decision (October 2026): not shipping on the App Store.** Most of the app works in the sandbox,
+but moving another app's window doesn't. That's the one thing Liftoff can't do without, and the
+only workaround that worked depends on an entitlement App Review rarely grants. Liftoff stays on
+direct distribution (Developer ID, Homebrew).
 
 ## How it was tested
 
-`SANDBOX=1 scripts/package.sh` builds `dist/Liftoff.app` with `Liftoff.sandbox.entitlements`,
-which holds `com.apple.security.app-sandbox` and nothing else. The app was signed with the local
-"Liftoff Dev" identity and tested on macOS 27.0.1. Without `SANDBOX=1` the script builds exactly
-what it built before.
+The app was built with `scripts/package.sh` and signed with the local "Liftoff Dev" identity,
+adding an entitlements file that held only `com.apple.security.app-sandbox` (`codesign
+--entitlements`). Tested on macOS 27.0.1.
 
 Temporary logging, since removed, recorded each permission check and each API result from inside
 the sandboxed process. Synthetic events posted at the HID level tested the event tap: a Hyper
@@ -125,6 +125,10 @@ Plus a Mac App Store provisioning profile and the Apple Distribution certificate
 - **Three privacy prompts** (Accessibility, Screen Recording, Automation) for a playful utility.
   Each needs a clear purpose string and an explanation on the welcome screen. Reviewers check
   that every prompt matches a feature they can see.
+
+Running a sandboxed build migrates the app's preferences from `~/Library/Preferences` into
+`~/Library/Containers/run.lil.liftoff`. After that, `defaults write run.lil.liftoff` writes into
+the container. Delete the container to go back.
 
 ## Recommendation
 
