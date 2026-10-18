@@ -24,7 +24,8 @@ on Apple silicon.
 
 ## Use
 
-Hold the modifier key of your choice, then grab a window and throw it across your screen.
+Hold Control-Option (⌃⌥, or another key you pick in Settings), then grab a window and throw it
+across your screen.
 
 ## Permissions
 
