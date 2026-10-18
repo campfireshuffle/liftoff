@@ -49,6 +49,13 @@ enum Settings {
         get { defaults.bool(forKey: "hasOnboarded") }
         set { defaults.set(newValue, forKey: "hasOnboarded") }
     }
+
+    /// The welcome window flies in only the first time; after that (say, relaunching to apply
+    /// Screen Recording) it just opens.
+    static var welcomeHasFlown: Bool {
+        get { defaults.bool(forKey: "welcomeHasFlown") }
+        set { defaults.set(newValue, forKey: "welcomeHasFlown") }
+    }
 }
 
 enum Permissions {
